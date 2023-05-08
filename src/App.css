@@ -1,0 +1,262 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+/* login css */
+
+
+.loginsection{
+  height: 100vh;
+  background-color: #9A616D;
+}
+
+
+.loginrow{
+  height: 100vh;
+justify-content: center;
+align-items: center;
+
+}
+.logincard{
+border-radius: 1rem;
+}
+#imagee{
+  border-radius: 1rem 0 0 1rem;
+}
+#i1{
+  color: #ff6219;
+}
+#loginh5{
+  letter-spacing: 1px;
+}
+#loginpt{
+  color: #393f81;
+}
+.loginat{
+  color: #393f81;
+}
+#loginat1{
+  color: #393f81;
+}
+/* signup css */
+#signsection{
+  background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp');
+
+}
+.signcard{
+  
+  border-radius: 15px;
+
+}
+.size{
+  display: block !important;
+}
+
+.hero-img{
+  height: 300px;
+  width: 100%;
+/* background-image: url("hero.jpg"); */
+background-color: #9A616D;
+
+}
+/* ##################################3*/
+.drag-container {
+  text-align: center;
+}
+
+.head {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  background-color: #CCCCCC;
+  width:100%;
+}
+.droppable {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  right: 0;
+  top: 10;
+  background-color: #9E9E9E;
+  border-left: 2px dotted red;
+}
+
+.draggable {
+  width: 100px;
+  height: 100px;
+  background-color: yellow;
+  margin: 10px auto;
+}
+
+.inProgress {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  left: 0;
+  top: 10;
+  background-color: #EEEEEE;
+  border-right: 2px dotted red;
+}
+.punchout {
+  padding: 20px;
+height: 20px;
+  align-items: center;
+  justify-items: center;
+  color: #9E9E9E;
+}
+.punchin {
+  padding: 20px;
+  height: 10px;
+  align-items: center;
+  justify-items: center;
+  color: #9E9E9E;
+}
+.tab{
+  display: flex;
+flex: 0 0 50%;
+    max-width: 50%;
+    padding: 0 20px;
+justify-content: center;
+}
+.item{
+  margin-left: 13px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 28px;
+
+
+}
+.index{
+  
+  color: brown;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 28px;
+}
+.modal-content{
+  width: 10%;
+}
+.mbody{
+  display: flex;
+flex-wrap: wrap;
+margin: 0 -20px;
+
+}
+.modal .modal-dialog{
+width: 350px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.slick-next:before,
+.slick-prev:before {
+  color: #000 !important;
+}
+
+.slick-slider {
+  margin: 30px auto 0px;
+  width: auto;
+}
+
+.card {
+  padding: 5px;
+  position: relative;
+  margin: 5px;
+  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.25);
+  border-top: 6px solid #D8D8D8;
+  transition: all 0.3s ease-in-out;
+  z-index: 1;
+}
+
+.slick-prev {
+  background: black;
+}
+
+.slick-next {
+  background: black;
+}
+
+.slick-dots li {
+  margin: 0 16px;
+}
+
+.slick-dots li button:before {
+  content: " ";
+  background: #D8D8D8;
+  opacity: 1;
+  height: 4px;
+  width: 40px;
+}
+.addto{
+  background-color: black;
+    color: white;
+    font-size: 10px;
+    padding: 10px 40px;
+    border-radius: 5px;
+    margin: 10px 0px;
+    cursor: pointer;
+   
+}
+.btn-primary{
+margin-left: 600px;
+}
+.FixedDiv{
+  cursor: pointer;
+    position: fixed;
+    text-align: center;
+    z-index: 25;
+    top: 0;
+    right: 0;
+    padding: 0 10px 10px 10px;
+    background-color: lightgray;
+    border-radius: 0 0 0 20px;
+}
+.CartNumber{
+  text-align: center;
+    font-size: 14px;
+    width: 15px;
+    color: white;
+    position: absolute;
+    top: 4px;
+    right: 7px;
+}
+.CartBox{
+  position: relative;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
