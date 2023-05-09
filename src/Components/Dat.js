@@ -31,28 +31,28 @@ export default function Dat() {
   const handleSubmit = async (e) => {
     console.log("hello");
 
-    // e.preventDefault();
-    // await axios
-    //   .post(`http://localhost:4800/punchatten/${user_id}`, {
-    //     punchin,
-    //     date,
-    //     user_id,
-    //   })
-    //   .then(function (response) {
-    //     // console.log("response", response.data);
-    //     setData(response.data.data);
-    //     navigate("/attendance");
-    //   })
-    //   .catch((err) => {
-    //     console.log("ERROR---", err);
-    //     if (err.message) {
-    //       alert(err.message);
-    //     }
-    //   });
+    e.preventDefault();
+    await axios
+      .post(`http://localhost:4800/punchatten/${user_id}`, {
+        punchin,
+        date,
+        user_id,
+      })
+      .then(function (response) {
+        // console.log("response", response.data);
+        setData(response.data.data);
+        navigate("/attendance");
+      })
+      .catch((err) => {
+        console.log("ERROR---", err);
+        if (err.message) {
+          alert(err.message);
+        }
+      });
   };
 
-  let todays = new Date();
-  let dates = todays.getFullYear() + "-" + (todays.getMonth() + 1 < 10 ? "0" : "") +(todays.getMonth() + 1) + "-" + (todays.getDate() < 10 ? "0" : "") +todays.getDate();
+  let todays = new Date().toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+
   
   const getholidayData = () => {
     axios.get("http://localhost:4800/holidays").then(function (response) {
@@ -93,7 +93,7 @@ return (
           id="punchIn"
           onClick={() => setpunchintime([getCurrentDateString()])}
           disabled={
-            holid.map((e) => e.date).find((e) => e === dates) || getshift
+            holid.map((e) => e.date).find((e) => e === todays) || getshift
           }>
           Punch
         </button>

@@ -9,13 +9,15 @@ import { Link } from "react-router-dom";
 
 export default function Attendance() {
   let use = localStorage.getItem("user");
+const user_id = parseInt(use);
   const handleClose = () => setShow(false);
   const [show, setShow] = useState(false);
   const [punchtime, setpunchtime] = useState([]);
   const [getuser1, setgetuser1] = useState([]);
   const [holi, setholi] = useState([]);
+  // console.log("holi",holi);
   const [active, setActive] = useState(false);
-
+  const [getshift, setgetshift] = useState(true);
   const getpunchindata = () => {
     axios.get(`http://localhost:4800/user/${use}`).then(function (response) {
       console.log("response",response.data);
@@ -26,6 +28,7 @@ export default function Attendance() {
   useEffect(() => {
     getpunchindata();
   }, []);
+
 
   const getholidayData = () => {
     axios.get("http://localhost:4800/holidays").then(function (response) {
@@ -83,9 +86,28 @@ export default function Attendance() {
   }
 
 
+// ye mene dat s liya h y work nhi kiya to ise delete krna h
+
+  const getshiftuser = () => {
+    axios.get(`http://localhost:4800/assishiftuser/${user_id}`).then(function (response) {
+      // console.log("response890", response.data);
+      let timedata = new Date().toLocaleTimeString();
+     if (
+        timedata >= response.data.data[0].starttime &&
+        timedata <= response.data.data[0].endtime
+      ) {
+        setgetshift(false);
+      }
+    });
+  };
+
+  useEffect(() => {
+    getshiftuser();
+  }, []);
+// yha tk 
   return (
     <div>
-      <button className="bg bg-info" onClick={() => setPunchIn(punchtime)} >{active ? "Punch Out" : "Punch In"}</button>
+      {/* <button className="bg bg-info" onClick={() => setPunchIn(punchtime)} >{active ? "Punch Out" : "Punch In"}</button> */}
       <Table striped bordered hover variant="dark">
         <thead>
           <tr>
@@ -203,8 +225,17 @@ export default function Attendance() {
                           View Details
                         </button>
                       </td>
-                      <td><button className="bg bg-info" onClick={() => setPunchIn(item)} >{active ? "Punch Out" : "Punch In"}</button></td>
-                    </>}
+                      <td>
+                        
+                        <button className="bg bg-info" onClick={() => setPunchIn(item)} 
+                         disabled={
+                          // holi.map((e) => e.date).find((e) => e === todays) ||
+                          getshift
+                        }>{active ? "Punch Out" : "Punch In"}</button>
+         
+                        </td>
+                    </>
+                    }
                 </tr>
               );
             })}
@@ -230,7 +261,7 @@ export default function Attendance() {
         </Modal>
       </Table>
 
-      {/* <Link to={"/dat"}>Attendance</Link>; */}
+      {/* <Link to={"/dat"}>Attendance</Link> */}
 
     </div>
   );

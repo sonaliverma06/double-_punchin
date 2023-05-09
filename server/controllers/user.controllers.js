@@ -379,17 +379,11 @@ router.get("/user/:id", async (req, res) => {
 });
 
 router.post("/punchatten/:id/:punchid", async (req, res) => {
-  // const id = req;
-  // console.log("body999999999", id);
-
-  const user_id = req.params.id;
-  console.log("user_id",user_id);
+ const user_id = req.params.id;
   const data = req.body;
   const punch_id = req.params.punchid
-  console.log("punch_id",punch_id);
-  const { punchin } = data;
-  console.log("fgdhuuuuuj",data);
-  await pool.getConnection((err, connection) => {
+ const { punchin } = data;
+ await pool.getConnection((err, connection) => {
     if (err) {
       return res.status(500).json({
         message: "Failed to connect",
@@ -397,8 +391,8 @@ router.post("/punchatten/:id/:punchid", async (req, res) => {
     }
     const finddata = `SELECT * FROM attendance WHERE user_id=${user_id}`;
     connection.query(finddata, (error, response) => {
-      // console.log("response sonali",response[0].id);
-      const a = response[0].id;
+
+    
       if (error) {
         return res.status(500).json({
           message: "error in fetching data",
@@ -410,7 +404,7 @@ router.post("/punchatten/:id/:punchid", async (req, res) => {
          // "INSERT INTO attendance(punchin, date, user_id) VALUES(?,?,?)",
           [JSON.stringify(punchin), user_id],
           (error, response) => {
-            console.log("error","response5555555",error,response);
+            // console.log("error","response5555555",error,response);
             connection.release();
 
             if (error) {
