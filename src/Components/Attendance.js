@@ -13,12 +13,12 @@ export default function Attendance() {
   const [show, setShow] = useState(false);
   const [punchtime, setpunchtime] = useState([]);
   const [getuser1, setgetuser1] = useState([]);
-  const [holi,setholi] =useState([]);
-  // console.log("holi",holi);
+  const [holi, setholi] = useState([]);
+  const [active, setActive] = useState(false);
 
   const getpunchindata = () => {
     axios.get(`http://localhost:4800/user/${use}`).then(function (response) {
-      // console.log("response", response);
+      console.log("response",response.data);
       setpunchtime(response.data.data);
     });
   };
@@ -27,28 +27,23 @@ export default function Attendance() {
     getpunchindata();
   }, []);
 
-const getholidayData = ()=>{
-  axios.get("http://localhost:4800/holidays").then(function (response) {
-    // console.log("response", response);
-    // const a = moment(new Date()).format('YYYY-MM-DD')
-  
-    // const b = response.data.data.filter((item)=>item.date === a )
-    // return(
-    //   setholi(b)
-    // )
-    // console.log("item",item);
-    setholi(response.data.data)
+  const getholidayData = () => {
+    axios.get("http://localhost:4800/holidays").then(function (response) {
+      // console.log("response", response.data.data)
+      const holidaylist = response.data.data.map((i) => {
+        i.date = new Date(i.date).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })
+        return i
+      })
+      setholi(holidaylist)
+    });
+  };
 
-  });
-};
-
-  useEffect (()=>{
+  useEffect(() => {
     getholidayData()
 
-  },[])
+  }, [])
 
   const handleShow = (item) => {
-    // console.log(item);
     setShow(true);
     setgetuser1(
       item?.attendance
@@ -57,11 +52,40 @@ const getholidayData = ()=>{
         .split("   ")
     );
   };
-  // let date = moment(new Date()).format('YYYY-MM-DD')
-  // console.log("date",date);
+
+// const setPunchIn = (punchtime) => {
+//       setActive(!active);
+//       console.log("item",punchtime);
+//       const a = JSON.parse(punchtime.attendance)
+       
+//       a.push(new Date().toLocaleTimeString())
+//       console.log("aaaaa",a)
+  
+//       axios.post(`http://localhost:4800/punchatten/${use}/${punchtime.id}`,{punchin:a}).then((res) => {
+//         console.log("hello");
+//         getpunchindata()
+//       })
+//     }
+  
+
+  const setPunchIn = (item) => {
+    setActive(!active);
+    console.log("item",item);
+    const a = JSON.parse(item.attendance)
+     
+    a.push(new Date().toLocaleTimeString())
+    console.log("aaaaa",a)
+
+    axios.post(`http://localhost:4800/punchatten/${use}/${item.id}`,{punchin:a}).then((res) => {
+      console.log("hello");
+      getpunchindata()
+    })
+  }
+
 
   return (
     <div>
+      <button className="bg bg-info" onClick={() => setPunchIn(punchtime)} >{active ? "Punch Out" : "Punch In"}</button>
       <Table striped bordered hover variant="dark">
         <thead>
           <tr>
@@ -70,19 +94,16 @@ const getholidayData = ()=>{
             {/* <th>Gross Hours</th> */}
             <th>Total Break</th>
             <th>Log</th>
-
-            {/* <th>holiday</th> */}
+            <th>punch</th>
           </tr>
         </thead>
         <tbody>
-         {punchtime &&
+          {punchtime &&
             punchtime.map((item) => {
-              console.log("item",item);
-              let item1 = item?.attendance
+            let item1 = item?.attendance
                 .replaceAll(/[/[","]|]/g, " ")
                 .trim()
                 .split("   ");
-
               var totalbreakStartTime = moment(
                 item1[1] ? item1[1] : item1[0],
                 "hh:mm:ss"
@@ -92,10 +113,10 @@ const getholidayData = ()=>{
                 item1[4]
                   ? item1[4]
                   : item1[2]
-                  ? item1[2]
-                  : item1[1]
-                  ? item1[1]
-                  : item1[0],
+                    ? item1[2]
+                    : item1[1]
+                      ? item1[1]
+                      : item1[0],
                 "hh:mm:ss"
               );
 
@@ -114,16 +135,16 @@ const getholidayData = ()=>{
                 effectivemin,
                 effectivesec,
               ].join(":");
-              // console.log("brak", totalBreak);
+
               var grossStartTime = moment(item1[0], "hh:mm:ss");
               var grossEndTime = moment(
                 item1[5]
                   ? item1[5]
                   : item1[3]
-                  ? item1[3]
-                  : item1[1]
-                  ? item1[1]
-                  : item1[0],
+                    ? item1[3]
+                    : item1[1]
+                      ? item1[1]
+                      : item1[0],
                 "hh:mm:ss"
               );
 
@@ -146,43 +167,60 @@ const getholidayData = ()=>{
                 .utc(moment(time2, "HH:mm:ss").diff(moment(time1, "HH:mm:ss")))
                 .format("HH:mm:ss");
 
+              const holidaySection = holi.map((i) => {
+                const allholidaydate = new Date(i.date).getDate()
+                const allholidayMonth = new Date(i.date).getMonth()
+                const allholidayYear = new Date(i.date).getFullYear()
+                const currentholidaydate = new Date(item.date).getDate()
+                const currentholidayMonth = new Date(item.date).getMonth()
+                const currentholidayYear = new Date(item.date).getFullYear()
+                const allholiday = `${allholidaydate}/${allholidayMonth}/${allholidayYear}`
+                const currentholiday = `${currentholidaydate}/${currentholidayMonth}/${currentholidayYear}`
+                if (allholiday === currentholiday) {
+                  return true
+                } else {
+                  return false
+                }
+              })
+              const filterDataHoli = holidaySection.filter((i) => i === true)
+
               return (
                 <tr>
-                  {}
-                 <td>{item.date }</td>
-                 
-                 {/* <td>{effectiveHours}</td> */}
-                  <td>{grossHours}</td>
-                  <td>{totalBreak}</td>
-                  <td>
-                    <button
-                      className="bg bg-info"
-                      onClick={() => {
-                        handleShow(item);
-                      }}
-                    >
-                      View Details
-                    </button>
-                  </td>
-                  {/* <td> 
-                  {holi.map((e) => e.date).find((e) => e === moment(new Date()).format('YYYY-MM-DD'))}
-                 </td> */}
+                  {filterDataHoli[0] ? <td colSpan={5}>Holiday</td>
+                    :
+                    <>
+                      <td>{item.date}</td>
+                      {/* <td>{effectiveHours}</td> */}
+                      <td>{grossHours}</td>
+                      <td>{totalBreak}</td>
+                      <td>
+                        <button
+                          className="bg bg-info"
+                          onClick={() => {
+                            handleShow(item);
+                          }}
+                        >
+                          View Details
+                        </button>
+                      </td>
+                      <td><button className="bg bg-info" onClick={() => setPunchIn(item)} >{active ? "Punch Out" : "Punch In"}</button></td>
+                    </>}
                 </tr>
               );
             })}
-             
+
         </tbody>
         <Modal show={show} onHide={() => handleClose()} animation={false}>
           <Modal.Body>
-            <div className="mbody"> 
-            {getuser1 &&
-              getuser1.map((item, index) => (
-                <div className="tab">
-                 <div className="index">{index % 2 == 0 ? "Punch In -": "Punch Out -"}</div>
-                  <div className="item">{item}</div>
-                </div>
-              ))}
-              </div>
+            <div className="mbody">
+              {getuser1 &&
+                getuser1.map((item, index) => (
+                  <div className="tab">
+                    <div className="index">{index % 2 == 0 ? "Punch In -" : "Punch Out -"}</div>
+                    <div className="item">{item}</div>
+                  </div>
+                ))}
+            </div>
           </Modal.Body>
           <Modal.Footer>
             <button variant="secondary" onClick={handleClose}>
@@ -191,9 +229,9 @@ const getholidayData = ()=>{
           </Modal.Footer>
         </Modal>
       </Table>
-     
-      <Link to={"/dat"}>Attendance</Link>;
-  
+
+      {/* <Link to={"/dat"}>Attendance</Link>; */}
+
     </div>
   );
 }

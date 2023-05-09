@@ -74,7 +74,7 @@ router.post("/signup", async (req, res) => {
     !data.password ||
     !data.repassword
   ) {
-    console.log(data.Name, data.email, data.password, data.repassword);
+    // console.log(data.Name, data.email, data.password, data.repassword);
     return res.status(500).send({ message: "Not provided required details" });
   }
 
@@ -88,7 +88,7 @@ router.post("/signup", async (req, res) => {
         [Name, email, hash,"user"],
         (error, response) => {
           connection.release();
-          console.log("error, responsesignup", error, response);
+          // console.log("error, responsesignup", error, response);
           if (error) {
             return res.status(500).json({
               message: "error in posting data",
@@ -134,7 +134,7 @@ router.post("/login", async (req, res) => {
               { id: response[0].id, email: response[0].email },
               "jwtkey"
             );
-            console.log("token", token);
+            // console.log("token", token);
             return res.status(201).json({
               message: "success",
               data: response,
@@ -151,10 +151,10 @@ router.post("/login", async (req, res) => {
 router.post("/assishift/:id", async (req, res) => {
     // const id = req.params.id;
     // console.log("ID", id);
-console.log("body12345", req.body);
+// console.log("body12345", req.body);
   const data = req.body.assig;
   const {shiftid,user} = data;
-  console.log("data", data);
+  // console.log("data", data);
 
   await pool.getConnection((err, connection) => {
     if (err) {
@@ -167,7 +167,7 @@ console.log("body12345", req.body);
       "INSERT INTO assingshift(shiftid,user) VALUES(?,?)",
       [shiftid,user],
       (error, response) => {
-         console.log("error", "response", error, response);
+        //  console.log("error", "response", error, response);
        connection.release();
         if (error) {
           return res.status(500).json({
@@ -355,7 +355,8 @@ router.get("/user/:id", async (req, res) => {
     }
   
     connection.query(
-      `SELECT date, GROUP_CONCAT(punchin) as 'attendance' FROM attendance WHERE user_id=${ids} group by date`,
+    
+      `SELECT id,date, GROUP_CONCAT(punchin) as 'attendance' FROM attendance WHERE user_id=${ids} group by date`,
       
   
       [ids],
@@ -377,17 +378,17 @@ router.get("/user/:id", async (req, res) => {
   });
 });
 
-router.post("/punchatten/:id", async (req, res) => {
-  // const id = req.body.id;
-  // console.log("body999999999", req.body.id);
+router.post("/punchatten/:id/:punchid", async (req, res) => {
+  // const id = req;
+  // console.log("body999999999", id);
 
   const user_id = req.params.id;
+  console.log("user_id",user_id);
   const data = req.body;
- const id =  req.params.id;
- console.log("gfgggggggggg id",id);
-
-  console.log("data111111",data);
-  const { punchin, date } = data;
+  const punch_id = req.params.punchid
+  console.log("punch_id",punch_id);
+  const { punchin } = data;
+  console.log("fgdhuuuuuj",data);
   await pool.getConnection((err, connection) => {
     if (err) {
       return res.status(500).json({
@@ -396,16 +397,17 @@ router.post("/punchatten/:id", async (req, res) => {
     }
     const finddata = `SELECT * FROM attendance WHERE user_id=${user_id}`;
     connection.query(finddata, (error, response) => {
-      console.log("error","response",error,response);
+      // console.log("response sonali",response[0].id);
+      const a = response[0].id;
       if (error) {
         return res.status(500).json({
           message: "error in fetching data",
         });
       } else {
         connection.query(
-          `UPDATE attendance SET punchin=?, user_id="${user_id}" WHERE id = "3"`,
-          //       [username, contact, address, city, ids],
-          // "INSERT INTO attendance(punchin, date, user_id) VALUES(?,?,?)",
+
+          `UPDATE attendance SET punchin=?, user_id="${user_id}" WHERE id = "${punch_id}"`,
+         // "INSERT INTO attendance(punchin, date, user_id) VALUES(?,?,?)",
           [JSON.stringify(punchin), user_id],
           (error, response) => {
             console.log("error","response5555555",error,response);
@@ -482,7 +484,7 @@ router.get("/product", async (req, res) => {
 
 router.get("/product/:id", async (req, res) => {
   const ids = req.params.id;
-  console.log("ids", ids);
+  // console.log("ids", ids);
   await pool.getConnection((err, connection) => {
     if (err) {
       return res.status(500).json({
