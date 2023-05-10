@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { Modal } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 
 export default function Attendance() {
@@ -15,7 +15,6 @@ const user_id = parseInt(use);
   const [punchtime, setpunchtime] = useState([]);
   const [getuser1, setgetuser1] = useState([]);
   const [holi, setholi] = useState([]);
-  // console.log("holi",holi);
   const [active, setActive] = useState(false);
   const [getshift, setgetshift] = useState(true);
   const getpunchindata = () => {
@@ -56,20 +55,7 @@ const user_id = parseInt(use);
     );
   };
 
-// const setPunchIn = (punchtime) => {
-//       setActive(!active);
-//       console.log("item",punchtime);
-//       const a = JSON.parse(punchtime.attendance)
-       
-//       a.push(new Date().toLocaleTimeString())
-//       console.log("aaaaa",a)
-  
-//       axios.post(`http://localhost:4800/punchatten/${use}/${punchtime.id}`,{punchin:a}).then((res) => {
-//         console.log("hello");
-//         getpunchindata()
-//       })
-//     }
-  
+
 
   const setPunchIn = (item) => {
     setActive(!active);
@@ -86,11 +72,10 @@ const user_id = parseInt(use);
   }
 
 
-// ye mene dat s liya h y work nhi kiya to ise delete krna h
+
 
   const getshiftuser = () => {
     axios.get(`http://localhost:4800/assishiftuser/${user_id}`).then(function (response) {
-      // console.log("response890", response.data);
       let timedata = new Date().toLocaleTimeString();
      if (
         timedata >= response.data.data[0].starttime &&
@@ -104,10 +89,10 @@ const user_id = parseInt(use);
   useEffect(() => {
     getshiftuser();
   }, []);
-// yha tk 
+
   return (
     <div>
-      {/* <button className="bg bg-info" onClick={() => setPunchIn(punchtime)} >{active ? "Punch Out" : "Punch In"}</button> */}
+    
       <Table striped bordered hover variant="dark">
         <thead>
           <tr>
@@ -167,6 +152,7 @@ const user_id = parseInt(use);
                     : item1[1]
                       ? item1[1]
                       : item1[0],
+                     
                 "hh:mm:ss"
               );
 
@@ -205,6 +191,12 @@ const user_id = parseInt(use);
                 }
               })
               const filterDataHoli = holidaySection.filter((i) => i === true)
+              console.log("item.date",item.date);
+              const previousdate = new Date(item.date).getDate()
+              console.log("bc",previousdate);
+              const currentd = new Date().getDate()
+              console.log("mc",currentd); 
+              console.log("condition", currentd=== previousdate);
 
               return (
                 <tr>
@@ -229,9 +221,10 @@ const user_id = parseInt(use);
                         
                         <button className="bg bg-info" onClick={() => setPunchIn(item)} 
                          disabled={
-                          // holi.map((e) => e.date).find((e) => e === todays) ||
-                          getshift
-                        }>{active ? "Punch Out" : "Punch In"}</button>
+                          ( currentd === previousdate? false :true )|| 
+                           getshift 
+                          }>
+                          {active ? "Punch Out" : "Punch In"}</button>
          
                         </td>
                     </>
